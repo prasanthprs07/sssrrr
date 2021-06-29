@@ -2,7 +2,11 @@
   "posts": [
     {
       "id": 1,
-      "title": "hello"
+      "name": "hello",
+      "contact": "8377982369",
+      "age": "34",
+      "salary": "234023"
+      
     }
   ],
   "profile": {
