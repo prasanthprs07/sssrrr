@@ -8,6 +8,12 @@
       "salary": "234023"
       
     }
+    {
+      "idtodo": 1,
+      "task": "testing",
+      "desc": "To brush teeth"
+      
+    }
   ],
   "profile": {
     "name": "typicode"
