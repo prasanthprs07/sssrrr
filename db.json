@@ -1,12 +1,13 @@
 {
-  "tutorials": 
+  "tutorials": [
     {
       "id":"",
       "title":"", 
       "description":"", 
       "published":"" 
       
-    },
+    }
+    ],
   "profile": {
     "name": "typicode"
   }
