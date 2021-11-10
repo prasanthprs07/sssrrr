@@ -1,1 +1,4139 @@
-{"swagger":"2.0","info":{"description":"This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.","version":"1.0.5","title":"Swagger Petstore","termsOfService":"http://swagger.io/terms/","contact":{"email":"apiteam@swagger.io"},"license":{"name":"Apache 2.0","url":"http://www.apache.org/licenses/LICENSE-2.0.html"}},"host":"petstore.swagger.io","basePath":"/v2","tags":[{"name":"pet","description":"Everything about your Pets","externalDocs":{"description":"Find out more","url":"http://swagger.io"}},{"name":"store","description":"Access to Petstore orders"},{"name":"user","description":"Operations about user","externalDocs":{"description":"Find out more about our store","url":"http://swagger.io"}}],"schemes":["https","http"],"paths":{"/pet/{petId}/uploadImage":{"post":{"tags":["pet"],"summary":"uploads an image","description":"","operationId":"uploadFile","consumes":["multipart/form-data"],"produces":["application/json"],"parameters":[{"name":"petId","in":"path","description":"ID of pet to update","required":true,"type":"integer","format":"int64"},{"name":"additionalMetadata","in":"formData","description":"Additional data to pass to server","required":false,"type":"string"},{"name":"file","in":"formData","description":"file to upload","required":false,"type":"file"}],"responses":{"200":{"description":"successful operation","schema":{"$ref":"#/definitions/ApiResponse"}}},"security":[{"petstore_auth":["write:pets","read:pets"]}]}},"/pet":{"post":{"tags":["pet"],"summary":"Add a new pet to the store","description":"","operationId":"addPet","consumes":["application/json","application/xml"],"produces":["application/json","application/xml"],"parameters":[{"in":"body","name":"body","description":"Pet object that needs to be added to the store","required":true,"schema":{"$ref":"#/definitions/Pet"}}],"responses":{"405":{"description":"Invalid input"}},"security":[{"petstore_auth":["write:pets","read:pets"]}]},"put":{"tags":["pet"],"summary":"Update an existing pet","description":"","operationId":"updatePet","consumes":["application/json","application/xml"],"produces":["application/json","application/xml"],"parameters":[{"in":"body","name":"body","description":"Pet object that needs to be added to the store","required":true,"schema":{"$ref":"#/definitions/Pet"}}],"responses":{"400":{"description":"Invalid ID supplied"},"404":{"description":"Pet not found"},"405":{"description":"Validation exception"}},"security":[{"petstore_auth":["write:pets","read:pets"]}]}},"/pet/findByStatus":{"get":{"tags":["pet"],"summary":"Finds Pets by status","description":"Multiple status values can be provided with comma separated strings","operationId":"findPetsByStatus","produces":["application/json","application/xml"],"parameters":[{"name":"status","in":"query","description":"Status values that need to be considered for filter","required":true,"type":"array","items":{"type":"string","enum":["available","pending","sold"],"default":"available"},"collectionFormat":"multi"}],"responses":{"200":{"description":"successful operation","schema":{"type":"array","items":{"$ref":"#/definitions/Pet"}}},"400":{"description":"Invalid status value"}},"security":[{"petstore_auth":["write:pets","read:pets"]}]}},"/pet/findByTags":{"get":{"tags":["pet"],"summary":"Finds Pets by tags","description":"Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.","operationId":"findPetsByTags","produces":["application/json","application/xml"],"parameters":[{"name":"tags","in":"query","description":"Tags to filter by","required":true,"type":"array","items":{"type":"string"},"collectionFormat":"multi"}],"responses":{"200":{"description":"successful operation","schema":{"type":"array","items":{"$ref":"#/definitions/Pet"}}},"400":{"description":"Invalid tag value"}},"security":[{"petstore_auth":["write:pets","read:pets"]}],"deprecated":true}},"/pet/{petId}":{"get":{"tags":["pet"],"summary":"Find pet by ID","description":"Returns a single pet","operationId":"getPetById","produces":["application/json","application/xml"],"parameters":[{"name":"petId","in":"path","description":"ID of pet to return","required":true,"type":"integer","format":"int64"}],"responses":{"200":{"description":"successful operation","schema":{"$ref":"#/definitions/Pet"}},"400":{"description":"Invalid ID supplied"},"404":{"description":"Pet not found"}},"security":[{"api_key":[]}]},"post":{"tags":["pet"],"summary":"Updates a pet in the store with form data","description":"","operationId":"updatePetWithForm","consumes":["application/x-www-form-urlencoded"],"produces":["application/json","application/xml"],"parameters":[{"name":"petId","in":"path","description":"ID of pet that needs to be updated","required":true,"type":"integer","format":"int64"},{"name":"name","in":"formData","description":"Updated name of the pet","required":false,"type":"string"},{"name":"status","in":"formData","description":"Updated status of the pet","required":false,"type":"string"}],"responses":{"405":{"description":"Invalid input"}},"security":[{"petstore_auth":["write:pets","read:pets"]}]},"delete":{"tags":["pet"],"summary":"Deletes a pet","description":"","operationId":"deletePet","produces":["application/json","application/xml"],"parameters":[{"name":"api_key","in":"header","required":false,"type":"string"},{"name":"petId","in":"path","description":"Pet id to delete","required":true,"type":"integer","format":"int64"}],"responses":{"400":{"description":"Invalid ID supplied"},"404":{"description":"Pet not found"}},"security":[{"petstore_auth":["write:pets","read:pets"]}]}},"/store/inventory":{"get":{"tags":["store"],"summary":"Returns pet inventories by status","description":"Returns a map of status codes to quantities","operationId":"getInventory","produces":["application/json"],"parameters":[],"responses":{"200":{"description":"successful operation","schema":{"type":"object","additionalProperties":{"type":"integer","format":"int32"}}}},"security":[{"api_key":[]}]}},"/store/order":{"post":{"tags":["store"],"summary":"Place an order for a pet","description":"","operationId":"placeOrder","consumes":["application/json"],"produces":["application/json","application/xml"],"parameters":[{"in":"body","name":"body","description":"order placed for purchasing the pet","required":true,"schema":{"$ref":"#/definitions/Order"}}],"responses":{"200":{"description":"successful operation","schema":{"$ref":"#/definitions/Order"}},"400":{"description":"Invalid Order"}}}},"/store/order/{orderId}":{"get":{"tags":["store"],"summary":"Find purchase order by ID","description":"For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions","operationId":"getOrderById","produces":["application/json","application/xml"],"parameters":[{"name":"orderId","in":"path","description":"ID of pet that needs to be fetched","required":true,"type":"integer","maximum":10,"minimum":1,"format":"int64"}],"responses":{"200":{"description":"successful operation","schema":{"$ref":"#/definitions/Order"}},"400":{"description":"Invalid ID supplied"},"404":{"description":"Order not found"}}},"delete":{"tags":["store"],"summary":"Delete purchase order by ID","description":"For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors","operationId":"deleteOrder","produces":["application/json","application/xml"],"parameters":[{"name":"orderId","in":"path","description":"ID of the order that needs to be deleted","required":true,"type":"integer","minimum":1,"format":"int64"}],"responses":{"400":{"description":"Invalid ID supplied"},"404":{"description":"Order not found"}}}},"/user/createWithList":{"post":{"tags":["user"],"summary":"Creates list of users with given input array","description":"","operationId":"createUsersWithListInput","consumes":["application/json"],"produces":["application/json","application/xml"],"parameters":[{"in":"body","name":"body","description":"List of user object","required":true,"schema":{"type":"array","items":{"$ref":"#/definitions/User"}}}],"responses":{"default":{"description":"successful operation"}}}},"/user/{username}":{"get":{"tags":["user"],"summary":"Get user by user name","description":"","operationId":"getUserByName","produces":["application/json","application/xml"],"parameters":[{"name":"username","in":"path","description":"The name that needs to be fetched. Use user1 for testing. ","required":true,"type":"string"}],"responses":{"200":{"description":"successful operation","schema":{"$ref":"#/definitions/User"}},"400":{"description":"Invalid username supplied"},"404":{"description":"User not found"}}},"put":{"tags":["user"],"summary":"Updated user","description":"This can only be done by the logged in user.","operationId":"updateUser","consumes":["application/json"],"produces":["application/json","application/xml"],"parameters":[{"name":"username","in":"path","description":"name that need to be updated","required":true,"type":"string"},{"in":"body","name":"body","description":"Updated user object","required":true,"schema":{"$ref":"#/definitions/User"}}],"responses":{"400":{"description":"Invalid user supplied"},"404":{"description":"User not found"}}},"delete":{"tags":["user"],"summary":"Delete user","description":"This can only be done by the logged in user.","operationId":"deleteUser","produces":["application/json","application/xml"],"parameters":[{"name":"username","in":"path","description":"The name that needs to be deleted","required":true,"type":"string"}],"responses":{"400":{"description":"Invalid username supplied"},"404":{"description":"User not found"}}}},"/user/login":{"get":{"tags":["user"],"summary":"Logs user into the system","description":"","operationId":"loginUser","produces":["application/json","application/xml"],"parameters":[{"name":"username","in":"query","description":"The user name for login","required":true,"type":"string"},{"name":"password","in":"query","description":"The password for login in clear text","required":true,"type":"string"}],"responses":{"200":{"description":"successful operation","headers":{"X-Expires-After":{"type":"string","format":"date-time","description":"date in UTC when token expires"},"X-Rate-Limit":{"type":"integer","format":"int32","description":"calls per hour allowed by the user"}},"schema":{"type":"string"}},"400":{"description":"Invalid username/password supplied"}}}},"/user/logout":{"get":{"tags":["user"],"summary":"Logs out current logged in user session","description":"","operationId":"logoutUser","produces":["application/json","application/xml"],"parameters":[],"responses":{"default":{"description":"successful operation"}}}},"/user/createWithArray":{"post":{"tags":["user"],"summary":"Creates list of users with given input array","description":"","operationId":"createUsersWithArrayInput","consumes":["application/json"],"produces":["application/json","application/xml"],"parameters":[{"in":"body","name":"body","description":"List of user object","required":true,"schema":{"type":"array","items":{"$ref":"#/definitions/User"}}}],"responses":{"default":{"description":"successful operation"}}}},"/user":{"post":{"tags":["user"],"summary":"Create user","description":"This can only be done by the logged in user.","operationId":"createUser","consumes":["application/json"],"produces":["application/json","application/xml"],"parameters":[{"in":"body","name":"body","description":"Created user object","required":true,"schema":{"$ref":"#/definitions/User"}}],"responses":{"default":{"description":"successful operation"}}}}},"securityDefinitions":{"api_key":{"type":"apiKey","name":"api_key","in":"header"},"petstore_auth":{"type":"oauth2","authorizationUrl":"https://petstore.swagger.io/oauth/authorize","flow":"implicit","scopes":{"read:pets":"read your pets","write:pets":"modify pets in your account"}}},"definitions":{"ApiResponse":{"type":"object","properties":{"code":{"type":"integer","format":"int32"},"type":{"type":"string"},"message":{"type":"string"}}},"Category":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"}},"xml":{"name":"Category"}},"Pet":{"type":"object","required":["name","photoUrls"],"properties":{"id":{"type":"integer","format":"int64"},"category":{"$ref":"#/definitions/Category"},"name":{"type":"string","example":"doggie"},"photoUrls":{"type":"array","xml":{"wrapped":true},"items":{"type":"string","xml":{"name":"photoUrl"}}},"tags":{"type":"array","xml":{"wrapped":true},"items":{"xml":{"name":"tag"},"$ref":"#/definitions/Tag"}},"status":{"type":"string","description":"pet status in the store","enum":["available","pending","sold"]}},"xml":{"name":"Pet"}},"Tag":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"name":{"type":"string"}},"xml":{"name":"Tag"}},"Order":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"petId":{"type":"integer","format":"int64"},"quantity":{"type":"integer","format":"int32"},"shipDate":{"type":"string","format":"date-time"},"status":{"type":"string","description":"Order Status","enum":["placed","approved","delivered"]},"complete":{"type":"boolean"}},"xml":{"name":"Order"}},"User":{"type":"object","properties":{"id":{"type":"integer","format":"int64"},"username":{"type":"string"},"firstName":{"type":"string"},"lastName":{"type":"string"},"email":{"type":"string"},"password":{"type":"string"},"phone":{"type":"string"},"userStatus":{"type":"integer","format":"int32","description":"User Status"}},"xml":{"name":"User"}}},"externalDocs":{"description":"Find out more about Swagger","url":"http://swagger.io"}}
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API Documentation",
+    "description": "It contains various APIs to scan various type of documents",
+    "termsOfService": "https://lakeba.com/",
+    "contact": {
+      "name": "Kreano Team",
+      "email": "support@kreano.com",
+      "url": "https://lakeba.com/"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "description": "Production server",
+      "url": "https://api.kreano.com/{basePath}",
+      "variables": {
+        "basePath": {
+          "enum": ["v1"],
+          "default": "v1"
+        }
+      }
+    }
+  ],
+
+  "tags": [
+    { "name": "admins", "description": "Secured Admin-only calls" },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/license": {
+      "post": {
+        "tags": ["License OCR"],
+        "description": "Upload driving license of both front and back side",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OCRDrivingLicense"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process the license"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process the license"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/passport": {
+      "post": {
+        "tags": ["Passport OCR"],
+        "description": "Upload Passport and get your Details",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload passport",
+                    "example": ""
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OCRPassport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Invalid Image Format"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process,Please Try Again"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/live-match/eyes": {
+      "post": {
+        "tags": ["Live Match"],
+        "description": "Check Liveness of eyes",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload Valid Id Proof",
+                    "example": ""
+                  },
+                  "image1": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images to compare",
+                    "example": ""
+                  },
+                  "image2": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images to compare",
+                    "example": ""
+                  }
+                },
+                "required": ["id", "image1", "image2"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/liveMatchEyes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Please upload all the relevant images"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to Process Image"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/live-match/five-step/eyes": {
+      "post": {
+        "tags": ["Live Match"],
+        "description": "Check Five Step Liveness of eyes",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload Valid Id Proof",
+                    "example": ""
+                  },
+                  "image1": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face center and eyes open",
+                    "example": ""
+                  },
+                  "image2": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face center and eyes closed",
+                    "example": ""
+                  },
+                  "image3": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face slightly turned towards left and eyes open",
+                    "example": ""
+                  },
+                  "image4": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face slightly turned towards right and eyes open",
+                    "example": ""
+                  }
+                },
+                "required": ["id", "image1", "image2", "image3", "image4"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/liveMatchFiveStepEyes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Please upload all the relevant images"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to Process Image"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/live-match/smile": {
+      "post": {
+        "tags": ["Live Match"],
+        "description": "Check Liveness of smile",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload Valid Id Proof",
+                    "example": ""
+                  },
+                  "image1": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images to compare",
+                    "example": ""
+                  },
+                  "image2": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images to compare",
+                    "example": ""
+                  }
+                },
+                "required": ["id", "image1", "image2"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/liveMatchSmile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Please upload all the relevant images"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to Process Image"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/live-match/five-step/smile": {
+      "post": {
+        "tags": ["Live Match"],
+        "description": "Check Five Step Liveness of smile",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload Valid Id Proof",
+                    "example": ""
+                  },
+                  "image1": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face center and without smiling",
+                    "example": ""
+                  },
+                  "image2": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face center and with smiling",
+                    "example": ""
+                  },
+                  "image3": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face slightly turned towards left and with smiling",
+                    "example": ""
+                  },
+                  "image4": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload images with Face slightly turned towards right and with smiling",
+                    "example": ""
+                  }
+                },
+                "required": ["id", "image1", "image2", "image3", "image4"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/liveMatchFiveStepSmile"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Please upload all the relevant images"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to Process Image"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/face-match": {
+      "post": {
+        "tags": ["Face Match"],
+        "description": "compare your face with valid Id proof Image and with other Images",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Take snapshot",
+                    "example": ""
+                  },
+                  "images": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Upload image to compare",
+                    "example": ""
+                  }
+                },
+                "required": ["id", "images"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/faceMatch"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Please upload all the relevant images"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to Process Image"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/driverLicence": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": "Validate driving License",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1965-01-01",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "john",
+                    "description": "GivenName can not contain more than 20 characters"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "smith",
+                    "description": "FamilyName can not contain more than 40 characters"
+                  },
+                  "LicenceNumber": {
+                    "type": "string",
+                    "example": "94977000",
+                    "description": "LicenceNumber can not contain more than 10 characters"
+                  },
+                  "StateOfIssue": {
+                    "type": "string",
+                    "example": "NSW",
+                    "description": "StateofIssue must be one of the following NSW, QLD, SA, TAS, VIC, WA, ACT, JBT, NT"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validateLicense"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/centreLink": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": "Validate Centre Link Card",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1953-12-06",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "Name": {
+                    "type": "string",
+                    "example": "John Smith",
+                    "description": "Name can not contain more than 32 characters"
+                  },
+                  "CardType": {
+                    "type": "string",
+                    "example": "HCC",
+                    "description": "Must be one of the following PCC (Pension Concession), HCC (Health Care), SHC (Seniors Health)"
+                  },
+                  "CardExpiry": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2020-03-29",
+                    "description": "CardExpiry must be in YYYY-MM-DD format"
+                  },
+                  "CustomerReferenceNumber": {
+                    "type": "string",
+                    "example": "204647416C",
+                    "description": "card number must be in format of 9 numbers followed by 1 letter"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/centreLinkCard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/citizenship": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": " Validate Citizenship",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2001-05-16",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "James",
+                    "description": "GivenName can not contain more than 100 characters"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "FamilyName can not contain more than 100 characters"
+                  },
+                  "AcquisitionDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2007-08-25",
+                    "description": "AcquisitionDate must be in YYYY-MM-DD format"
+                  },
+                  "StockNumber": {
+                    "type": "string",
+                    "example": "ACD0000000",
+                    "description": "StockNumber must be minimum 4 characters"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/citizenship"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/descent": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": " Validate Descent",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1965-01-01",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "GivenName can not contain more than 100 characters"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "FamilyName can not contain more than 100 characters"
+                  },
+                  "AcquisitionDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2020-01-01",
+                    "description": "AcquisitionDate must be in YYYY-MM-DD format"
+                  },
+                  "StockNumber": {
+                    "type": "string",
+                    "example": "53268020432",
+                    "description": "StockNumber must be minimum 4 characters"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/descent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/immiCard": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": " Validate ImmiCard",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1980-10-31",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "James",
+                    "description": "GivenName can not contain more than 49 characters"
+                  },
+                  "MiddleName": {
+                    "type": "string",
+                    "example": "Robert",
+                    "description": "MiddleName is optional and can not contain more than 49 characters"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "FamilyName can not contain more than 49 characters"
+                  },
+                  "ImmiCardNumber": {
+                    "type": "string",
+                    "example": "PRE008948",
+                    "description": "ImmiCardNumber must contain minimum 9 characters"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/immiCard"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/visa": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": " Validate Visa",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1992-06-18",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "GivenName can not contain more than 49 characters"
+                  },
+                  "MiddleName": {
+                    "type": "string",
+                    "example": "Robert",
+                    "description": "MiddleName is optional and can not contain more than 49 characters"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "FamilyName can not contain more than 49 characters"
+                  },
+                  "PassportNumber": {
+                    "type": "string",
+                    "example": "DW126813",
+                    "description": "PassportNumber must contain 7 to 9 characters"
+                  },
+                  "CountryOfIssue": {
+                    "type": "string",
+                    "example": "CAN",
+                    "description": "Country Code"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/visa"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/australian-dvs/passport": {
+      "post": {
+        "tags": ["Australian DVS"],
+        "description": "Validate Passport",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1972-09-02",
+                    "description": "BirthDate must be in YYYY-MM-DD format"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "GivenName can not contain more than 31 characters"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "FamilyName can not contain more than 31 characters"
+                  },
+                  "TravelDocumentNumber": {
+                    "type": "string",
+                    "example": "C5100511",
+                    "description": "TravelDocumentNumber can not contain more than 9 characters and less than 7 characters"
+                  },
+                  "Gender": {
+                    "type": "string",
+                    "example": "M",
+                    "description": "Gender must be any one of the following M, F, X"
+                  },
+                  "ExpiryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2020-01-01",
+                    "description": "ExpiryDate must be in YYYY-MM-DD format"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validatePassport"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aml/pep": {
+      "post": {
+        "tags": ["AML Screening"],
+        "description": "Validate Customer compliance",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "birthYear": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1989",
+                    "description": "BirthYear must be in YYYY format"
+                  },
+                  "fuzziness": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "From 0 - Exact Match to 1 - Any match, including spelling and phonetics, increment of 0.1"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "First Name of a person"
+                  },
+                  "middle_names": {
+                    "type": "string",
+                    "example": "Allen",
+                    "description": "Middle name of a person"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "Last name of a person"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validateAml"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aml/plus": {
+      "post": {
+        "tags": ["AML Screening"],
+        "description": "Validate  Adverse Media and Watchlists",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "birthYear": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1989",
+                    "description": "BirthYear must be in YYYY format"
+                  },
+                  "fuzziness": {
+                    "type": "string",
+                    "example": "1",
+                    "description": "From 0 - Exact Match to 1 - Any match, including spelling and phonetics, increment of 0.1"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "First Name of a person"
+                  },
+                  "middle_names": {
+                    "type": "string",
+                    "example": "Allen",
+                    "description": "Middle name of a person"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Smith",
+                    "description": "Last name of a person"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validateAmlPlus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/global/kyc": {
+      "post": {
+        "tags": ["Global ID Verification"],
+        "description": "Validate global Id",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "countryCode": {
+                    "type": "string",
+                    "example": "AU",
+                    "description": "countryCode must be in ISO 3166-1 Alpha-2 country code format"
+                  },
+                  "addressLine1": {
+                    "type": "string",
+                    "example": "Av 55",
+                    "description": "addressLine1 must be in address mentioned in the national identity card"
+                  },
+                  "locality": {
+                    "type": "string",
+                    "example": "BARRETOS",
+                    "description": "locality must be in address mentioned in the national identity card"
+                  },
+                  "postCode": {
+                    "type": "string",
+                    "example": "12234556",
+                    "description": "postCode must be in address mentioned in the national identity card"
+                  },
+                  "province": {
+                    "type": "string",
+                    "example": "SP",
+                    "description": "province must be in address mentioned in the national identity card"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "1995-03-01",
+                    "format": "date",
+                    "description": "dob must be in YYYY-MM-DD format"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "Names should be entered exactly as printed on the card (in the same nameline)."
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Stephen",
+                    "description": "Names should be entered exactly as printed on the card (in the same nameline)."
+                  },
+                  "nationalid": {
+                    "type": "string",
+                    "example": "32698687827",
+                    "description": "nationalid must be same as mentioned in the card."
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validateGlobalId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/global/international": {
+      "post": {
+        "tags": ["Global ID Verification"],
+        "description": "Validate global Id",
+        "operationId": "",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1c5d9332-ca4f-48fb-8ef6-yf4d931ea752",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "x-secret-key",
+            "schema": {
+              "type": "string"
+            },
+            "example": "b68r8d1b-f1dg-5t0d-88d1-edfc4f77bb5a",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "countryCode": {
+                    "type": "string",
+                    "example": "AU",
+                    "description": "countryCode must be in ISO 3166-1 Alpha-2 country code format"
+                  },
+                  "addressLine1": {
+                    "type": "string",
+                    "example": "Av 55",
+                    "description": "addressLine1 must be in address mentioned in the national identity card"
+                  },
+                  "locality": {
+                    "type": "string",
+                    "example": "BARRETOS",
+                    "description": "locality must be in address mentioned in the national identity card"
+                  },
+                  "postCode": {
+                    "type": "string",
+                    "example": "12234556",
+                    "description": "postCode must be in address mentioned in the national identity card"
+                  },
+                  "province": {
+                    "type": "string",
+                    "example": "SP",
+                    "description": "province must be in address mentioned in the national identity card"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "example": "1995-03-01",
+                    "format": "date",
+                    "description": "dob must be in YYYY-MM-DD format"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "John",
+                    "description": "Names should be entered exactly as printed on the card (in the same nameline)."
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "Stephen",
+                    "description": "Names should be entered exactly as printed on the card (in the same nameline)."
+                  },
+                  "nationalid": {
+                    "type": "string",
+                    "example": "32698687827",
+                    "description": "nationalid must be same as mentioned in the card."
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfull Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/validateGlobalId"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string",
+                      "example": "Unable to process"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OCRInvoice": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "companyName": {
+                "type": "string",
+                "example": "Power water"
+              },
+              "utilityType": {
+                "type": "string",
+                "example": "water"
+              },
+              "accountType": {
+                "type": "string",
+                "example": "Personal"
+              },
+              "billerCode": {
+                "type": "string",
+                "example": "7000"
+              },
+              "billerRef": {
+                "type": "string",
+                "example": "11111"
+              },
+              "state": {
+                "type": "string",
+                "example": "NSW"
+              },
+              "postCode": {
+                "type": "string",
+                "example": "0801"
+              },
+              "amount": {
+                "type": "string",
+                "example": "$30"
+              },
+              "amountSybol": {
+                "type": "string",
+                "example": "$"
+              }
+            }
+          }
+        }
+      },
+      "OCRDrivingLicense": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Benjamin"
+              },
+              "middleName": {
+                "type": "string",
+                "example": "Franklin"
+              },
+              "surname": {
+                "type": "string",
+                "example": "James"
+              },
+              "address": {
+                "type": "string",
+                "example": "Unit 1 LANGLEY NSW 2147"
+              },
+              "licenseNumber": {
+                "type": "string",
+                "example": "00000000"
+              },
+              "stateIssue": {
+                "type": "string",
+                "example": "NSW"
+              },
+              "dateOfBirth": {
+                "type": "string",
+                "format": "date",
+                "example": "1988-09-26"
+              },
+              "expiryDate": {
+                "type": "string",
+                "format": "date",
+                "example": "2028-09-11"
+              },
+              "newaddress": {
+                "type": "string",
+                "example": "Unit 1 LANGLEY NSW 2147"
+              }
+            }
+          }
+        }
+      },
+      "OCRPassport": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "documentCode": {
+                "type": "string",
+                "example": "P"
+              },
+              "issuingState": {
+                "type": "string",
+                "example": "ITA"
+              },
+              "lastName": {
+                "type": "string",
+                "example": "Michael"
+              },
+              "firstName": {
+                "type": "string",
+                "example": "John"
+              },
+              "documentNumber": {
+                "type": "string",
+                "example": "DQS000000"
+              },
+              "documentNumberCheckDigit": {
+                "type": "string",
+                "example": "9"
+              },
+              "nationality": {
+                "type": "string",
+                "example": "ITA"
+              },
+              "birthDate": {
+                "type": "string",
+                "example": "981125"
+              },
+              "birthDateCheckDigit": {
+                "type": "string",
+                "example": "11"
+              },
+              "sex": {
+                "type": "string",
+                "example": "male"
+              },
+              "expirationDate": {
+                "type": "string",
+                "example": "270710"
+              },
+              "expirationDateCheckDigit": {
+                "type": "string",
+                "example": "7"
+              },
+              "personalNumber": {
+                "type": "string",
+                "example": "00000000"
+              },
+              "personalNumberCheckDigit": {
+                "type": "string",
+                "example": "0"
+              },
+              "compositeCheckDigit": {
+                "type": "string",
+                "example": "0"
+              }
+            }
+          }
+        }
+      },
+      "faceMatch": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "FaceComparision": {
+                "type": "string",
+                "example": "Failed"
+              },
+              "imageLiveness": {
+                "type": "boolean",
+                "example": "false"
+              },
+              "Image1": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string",
+                    "example": "The face doesn't match"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 95.71969604492188
+                      }
+                    }
+                  }
+                }
+              },
+              "Image2": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "liveMatchEyes": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "FaceComparision": {
+                "type": "string",
+                "example": "Failed"
+              },
+              "imageLiveness": {
+                "type": "boolean",
+                "example": "false"
+              },
+              "Image1": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string",
+                    "example": "The face doesn't match"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 95.71969604492188
+                      }
+                    }
+                  }
+                }
+              },
+              "Image2": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "liveMatchFiveStepEyes": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "FaceComparision": {
+                "type": "string",
+                "example": "Failed"
+              },
+              "imageLiveness": {
+                "type": "boolean",
+                "example": "false"
+              },
+              "Image1": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string",
+                    "example": "The face doesn't match"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 95.71969604492188
+                      }
+                    }
+                  }
+                }
+              },
+              "Image2": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              },
+              "Image3": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              },
+              "Image4": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              },
+              "Image5": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isEyesOpen": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "EyesConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "liveMatchSmile": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "FaceComparision": {
+                "type": "string",
+                "example": "Failed"
+              },
+              "imageLiveness": {
+                "type": "boolean",
+                "example": "false"
+              },
+              "Image1": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string",
+                    "example": "The face doesn't match"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 95.71969604492188
+                      }
+                    }
+                  }
+                }
+              },
+              "Image2": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "liveMatchFiveStepSmile": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "FaceComparision": {
+                "type": "string",
+                "example": "Failed"
+              },
+              "imageLiveness": {
+                "type": "boolean",
+                "example": "false"
+              },
+              "Image1": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string",
+                    "example": "The face doesn't match"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 95.71969604492188
+                      }
+                    }
+                  }
+                }
+              },
+              "Image2": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              },
+              "Image3": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              },
+              "Image4": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              },
+              "Image5": {
+                "type": "object",
+                "properties": {
+                  "result": {
+                    "type": "string"
+                  },
+                  "details": {
+                    "type": "object",
+                    "properties": {
+                      "isFaceCenter": {
+                        "type": "boolean",
+                        "example": true
+                      },
+                      "isSmiling": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "smilingConfidence": {
+                        "type": "number",
+                        "example": 86.689856
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "redact": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "example": "https://losdevinvoice.blob.core.windows.net/losdevinvoice/4db779a2-2139-4291-89ad-afa12265c334.pdf"
+              }
+            }
+          }
+        }
+      },
+      "birthCertificate": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "N"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "BirthCertificateResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "centreLinkCard": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "CentrelinkResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "Name": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardType": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardExpiry": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CRN1": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CRN2": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CRN3": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CustomerReferenceNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ExpiryDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ExpiryMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ExpiryYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegistrationState": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "citizenship": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "CitizenshipCertificateResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "GivenName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "StockNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegistrationState": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "descent": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "DescentResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "GivenName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "AcquisitionDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "StockNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegisterNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "EntryNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ClientID": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegistrationState": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "immiCard": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "ImmiCardResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "GivenName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ImmiCardNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegistrationState": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "marriage": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "N"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "MarriageCertificateResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validateAml": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "200"
+              },
+              "status": {
+                "type": "string",
+                "example": "success"
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "ref": {
+                        "type": "string",
+                        "example": "1542342924-fewyv3Gc"
+                      },
+                      "searcher_id": {
+                        "type": "string",
+                        "example": "4901"
+                      },
+                      "assignee_id": {
+                        "type": "string",
+                        "example": "4901"
+                      },
+                      "filters": {
+                        "type": "object"
+                      },
+                      "searcher": {
+                        "type": "object"
+                      },
+                      "assignee": {
+                        "type": "object"
+                      },
+                      "hits": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "match_status": {
+                        "type": "string",
+                        "example": "potential_match"
+                      },
+                      "risk_level": {
+                        "type": "string",
+                        "example": "unknown"
+                      },
+                      "search_term": {
+                        "type": "string",
+                        "example": "John Allen Smith"
+                      },
+                      "submitted_term": {
+                        "type": "string",
+                        "example": "John Allen Smith"
+                      },
+                      "client_ref": {
+                        "type": "string",
+                        "example": "APIKEY"
+                      },
+                      "total_hits": {
+                        "type": "string",
+                        "example": "4"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-01-01 16:29:13"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-01-01 16:29:13"
+                      },
+                      "limit": {
+                        "type": "string",
+                        "example": "100"
+                      },
+                      "offset": {
+                        "type": "string",
+                        "example": "0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validateAmlPlus": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "200"
+              },
+              "status": {
+                "type": "string",
+                "example": "success"
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "ref": {
+                        "type": "string",
+                        "example": "1542342924-fewyv3Gc"
+                      },
+                      "searcher_id": {
+                        "type": "string",
+                        "example": "4901"
+                      },
+                      "assignee_id": {
+                        "type": "string",
+                        "example": "4901"
+                      },
+                      "filters": {
+                        "type": "object"
+                      },
+                      "searcher": {
+                        "type": "object"
+                      },
+                      "assignee": {
+                        "type": "object"
+                      },
+                      "hits": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "match_status": {
+                        "type": "string",
+                        "example": "potential_match"
+                      },
+                      "risk_level": {
+                        "type": "string",
+                        "example": "unknown"
+                      },
+                      "search_term": {
+                        "type": "string",
+                        "example": "John Allen Smith"
+                      },
+                      "submitted_term": {
+                        "type": "string",
+                        "example": "John Allen Smith"
+                      },
+                      "client_ref": {
+                        "type": "string",
+                        "example": "APIKEY"
+                      },
+                      "total_hits": {
+                        "type": "string",
+                        "example": "4"
+                      },
+                      "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-01-01 16:29:13"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2017-01-01 16:29:13"
+                      },
+                      "limit": {
+                        "type": "string",
+                        "example": "100"
+                      },
+                      "offset": {
+                        "type": "string",
+                        "example": "0"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "nameChange": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "N"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "ChangeOfNameCertificateResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "visa": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "VisaResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "GivenName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "PassportNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CountryOfIssue": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegistrationState": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validatePassport": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "000000"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "PassportResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "GivenName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "TravelDocumentNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "Gender": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validateMedicard": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "MedicareResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardExpiry": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardType": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FullName1": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FullName2": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FullName3": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FullName4": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "IndividualReferenceNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validateLicense": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "VerifyDocumentResult": {
+                "type": "object",
+                "properties": {
+                  "VerificationResultCode": {
+                    "type": "string",
+                    "example": "Y"
+                  },
+                  "VerificationRequestNumber": {
+                    "type": "string",
+                    "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                  },
+                  "OriginatingAgencyCode": {
+                    "type": "string",
+                    "example": "XXXX"
+                  },
+                  "ActivityId": {
+                    "type": "string",
+                    "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "properties": {
+                      "i:type": {
+                        "type": "string",
+                        "example": "DriverLicenceResponse"
+                      }
+                    }
+                  }
+                }
+              },
+              "fieldDetails": {
+                "type": "object",
+                "properties": {
+                  "GivenName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "MiddleName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "FamilyName": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "LicenceNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDate": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthMonth": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "BirthYear": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "StateOfIssue": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CountryOfIssue": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ImmiCardNumber": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "CardType": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "ExpiryDay": {
+                    "type": "string",
+                    "example": "Full Match"
+                  },
+                  "RegistrationState": {
+                    "type": "string",
+                    "example": "Full Match"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validateGlobalId": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "completename": {
+                "type": "string",
+                "example": "Adalgisa Nery"
+              },
+              "formofaddress": {
+                "type": "string",
+                "example": ""
+              },
+              "qualificationpreceding": {
+                "type": "string",
+                "example": ""
+              },
+              "givenfullname": {
+                "type": "string",
+                "example": "Adalgisa"
+              },
+              "givennameinitials": {
+                "type": "string",
+                "example": ""
+              },
+              "qualification_int_first": {
+                "type": "string",
+                "example": ""
+              },
+              "surname_prefix_first": {
+                "type": "string",
+                "example": ""
+              },
+              "surname_first": {
+                "type": "string",
+                "example": "Nery"
+              },
+              "indicator": {
+                "type": "string",
+                "example": ""
+              },
+              "qualification_int_second": {
+                "type": "string",
+                "example": ""
+              },
+              "surname_prefix_second": {
+                "type": "string",
+                "example": ""
+              },
+              "qualification_suceeding": {
+                "type": "string",
+                "example": ""
+              },
+              "name_qualified": {
+                "type": "string",
+                "example": ""
+              },
+              "function": {
+                "type": "string",
+                "example": ""
+              },
+              "gender": {
+                "type": "string",
+                "example": ""
+              },
+              "nationality": {
+                "type": "string",
+                "example": ""
+              },
+              "nationalid": {
+                "type": "string",
+                "example": "32698687827"
+              },
+              "organization_name": {
+                "type": "string",
+                "example": ""
+              },
+              "dob": {
+                "type": "string",
+                "example": "08/08/1987"
+              },
+              "businessid": {
+                "type": "string",
+                "example": ""
+              },
+              "contact_type": {
+                "type": "string",
+                "example": ""
+              },
+              "countryCode": {
+                "type": "string",
+                "example": "US"
+              },
+              "passport": {
+                "type": "string",
+                "example": ""
+              },
+              "codes": {
+                "type": "object",
+                "properties": {
+                  "reliability": {
+                    "type": "string",
+                    "example": "10"
+                  },
+                  "adaptation": {
+                    "type": "string",
+                    "example": "0"
+                  },
+                  "detailCode": {
+                    "type": "string",
+                    "example": "WS-333865.2020.0.1.22.6.43.638"
+                  },
+                  "detail_list": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "options": {
+                    "type": "string",
+                    "example": "IdentityVerify;DisableDQChecks;messageVerbose"
+                  },
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/messages"
+                    }
+                  },
+                  "detailList": {
+                    "type": "string",
+                    "example": ""
+                  }
+                }
+              },
+              "contactType": {
+                "type": "string",
+                "example": ""
+              },
+              "nameQualified": {
+                "type": "string",
+                "example": ""
+              },
+              "organizationName": {
+                "type": "string",
+                "example": ""
+              },
+              "qualificationIntFirst": {
+                "type": "string",
+                "example": ""
+              },
+              "qualificationIntSecond": {
+                "type": "string",
+                "example": ""
+              },
+              "qualificationSuceeding": {
+                "type": "string",
+                "example": ""
+              },
+              "surnameFirst": {
+                "type": "string",
+                "example": "Nery"
+              },
+              "surnamePrefixFirst": {
+                "type": "string",
+                "example": ""
+              },
+              "surnamePrefixSecond": {
+                "type": "string",
+                "example": ""
+              },
+              "Status": {
+                "type": "string",
+                "example": "Full Match"
+              }
+            }
+          }
+        }
+      },
+      "validateChineseBank": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "reportingReference": {
+                "type": "string",
+                "example": "XX-XXX-XXXXXXXXXXXXXXX"
+              },
+              "safeHarbour": {
+                "type": "boolean",
+                "example": false
+              },
+              "bankCard": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "verified": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "safeHarbourScore": {
+                    "type": "string",
+                    "example": "M2"
+                  },
+                  "fullName": {
+                    "type": "string",
+                    "example": "FULLNAME"
+                  },
+                  "idCardNo": {
+                    "type": "string",
+                    "example": "123456XXXXXXXXXXXX"
+                  },
+                  "bankCardNo": {
+                    "type": "string",
+                    "example": "111111XXXXXXXXXXXX"
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "example": "YYYY-MM-DD"
+                  },
+                  "fields": {
+                    "type": "object",
+                    "properties": {
+                      "fullName": {
+                        "type": "string",
+                        "example": "True"
+                      },
+                      "idCardNo": {
+                        "type": "string",
+                        "example": "True"
+                      },
+                      "bankCardNo": {
+                        "type": "string",
+                        "example": "True"
+                      },
+                      "dateOfBirth": {
+                        "type": "string",
+                        "example": "True"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "validateChineseNationalId": {
+        "type": "object",
+        "properties": {
+          "msg": {
+            "type": "string",
+            "example": "Request Success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "reportingReference": {
+                "type": "string",
+                "example": "XX-XXX-XXXXXXXXXXXXXXX"
+              },
+              "safeHarbour": {
+                "type": "boolean",
+                "example": false
+              },
+              "nationalId": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "number",
+                    "example": 0
+                  },
+                  "verified": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "safeHarbourScore": {
+                    "type": "string",
+                    "example": "M2"
+                  },
+                  "fullName": {
+                    "type": "string",
+                    "example": "黄俊龙"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "example": "Male"
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "example": "YYYY-MM-DD"
+                  },
+                  "idCardNo": {
+                    "type": "string",
+                    "example": "422822XXXXXXXXXXXX"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "fields": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "True"
+                      },
+                      "dateOfBirth": {
+                        "type": "string",
+                        "example": "True"
+                      },
+                      "idCardNo": {
+                        "type": "string",
+                        "example": "True"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "messages": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1MT-AU-MATCHED-1+1"
+          },
+          "value": {
+            "type": "string",
+            "example": "Full Match for 1+1 verification"
+          }
+        }
+      }
+    }
+  }
+}
